@@ -1,11 +1,23 @@
 var amqplib = require('amqplib/callback_api')
 var shell = require('shelljs')
 var fs= require('fs')
+var config = require('../../public/config')
 
 var queueName = 'test_engine_casperjs'
 
-amqplib.connect('amqp://jinse_admin:jinse-admin-e59cc9ba614a9b92018@172.17.59.159:5672/crawl', function(err, conn) {
-// amqplib.connect('amqp://admin:admin@127.0.0.1:5672/crawl', function(err, conn) {
+var env = config.env
+var amqplibUrl = ''
+var casperjsUrl = ''
+if (env == 'dev') {
+    amqplibUrl = config.dev.amqplibUrl
+    casperjsPath = config.dev.casperjsPath
+} else {
+    amqplibUrl = config.pro.amqplibUrl
+    casperjsPath = config.pro.casperjsPath
+}
+
+
+amqplib.connect(amqplibUrl, function(err, conn) {
     if (err != null) bail(err)
 
     conn.createChannel(newTask)
@@ -28,8 +40,7 @@ function newTask(err, ch) {
                 console.log("脚本存在")
 
                 // 执行脚本
-                if (shell.exec('sudo docker exec -i 471b73abcc3a /alidata/server/node/bin/casperjs ' + path + ' ' + result.body.task_run_log_id + ' "' + result.body.url + '"', {async:true}).code !== 0) {
-                // if (shell.exec('casperjs ' + path + ' ' + result.body.task_run_log_id + ' "' + result.body.url + '"').code !== 0) {
+                if (shell.exec(casperjsPath + ' ' + path + ' ' + result.body.task_run_log_id + ' "' + result.body.url + '"').code !== 0) {
                     shell.echo('脚本执行 Fail:')
                     ch.ack(msg)
                 } else {
