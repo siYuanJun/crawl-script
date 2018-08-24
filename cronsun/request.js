@@ -6,8 +6,8 @@ var arguments = process.argv.splice(2);
 var driver = arguments[0]
 var cron = arguments[1]
 var env = config.env
-var amqplibUrl = ''
-var casperjsUrl = ''
+var nodePath = ''
+var casperjsPath = ''
 if (env == 'dev') {
     casperjsPath = config.dev.casperjsPath 
     nodePath = config.dev.nodePath

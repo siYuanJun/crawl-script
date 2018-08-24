@@ -7,7 +7,7 @@ var queueName = 'test_engine_node'
 
 var env = config.env
 var amqplibUrl = ''
-var casperjsUrl = ''
+var nodePath = ''
 if (env == 'dev') {
     amqplibUrl = config.dev.amqplibUrl
     nodePath = config.dev.nodePath
