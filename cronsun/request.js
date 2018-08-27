@@ -8,20 +8,24 @@ var cron = arguments[1]
 var env = config.env
 var nodePath = ''
 var casperjsPath = ''
+var jinseApiUrl = ''
 if (env == 'dev') {
-    casperjsPath = config.dev.casperjsPath 
+    casperjsPath = config.dev.casperjsPath
     nodePath = config.dev.nodePath
+    jinseApiUrl = config.dev.jinse_api_url
 } else {
     casperjsPath = config.pro.casperjsScope
     nodePath = config.pro.nodeScope
+    jinseApiUrl = config.pro.jinse_api_url
 }
 if (driver == undefined || cron == undefined) {
     console.log('driver or cron 必填，eg: node request.js {driver} {cron}')
     process.exit()
 }
+console.log(jinseApiUrl)
 // 发起请求
-console.log(`请求 URL ：${config.jinse_api_url}/v1/script/queue?driver=${driver}&cron=${cron}`)
-request(`${config.jinse_api_url}/v1/script/queue?driver=${driver}&cron=${cron}`)
+console.log(`请求 URL ：${jinseApiUrl}/v1/script/queue?driver=${driver}&cron=${cron}`)
+request(`${jinseApiUrl}/v1/script/queue?driver=${driver}&cron=${cron}`)
     .then(function (repos) {
         var res = JSON.parse(repos)
         if (res.status_code != 200) {
