@@ -6,8 +6,8 @@ var Config = {
     env: "pro",
     jinse_api_url: pro_api_host,
     proxy_ip: '172.18.0.1:8123',
-    post_result_url: dev_api_host + '/v2/data/results',
-    post_error_url: dev_api_host + '/v2/alarm_result/handle',
+    post_result_url: pro_api_host + '/v2/data/results',
+    post_error_url: pro_api_host + '/v2/alarm_result/handle',
     project_path: '/alidata/www/crawl',
     dev: {
         amqplibUrl: 'amqp://admin:admin@127.0.0.1:5672/crawl',
