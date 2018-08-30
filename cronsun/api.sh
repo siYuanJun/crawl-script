@@ -10,6 +10,6 @@ if  [ ! -n "$2" ] ;then
 fi
 
 #node /alidata/www/crawl/cronsun/request.js $1 $2
-docker exec -i crawl-v1 /alidata/server/node/bin/node /alidata/www/crawl/cronsun/request.js $1 $2
+sudo docker exec -i crawl-v1 /alidata/server/node/bin/node /alidata/www/crawl/cronsun/request.js $1 $2
 
 
