@@ -1,11 +1,28 @@
 var amqplib = require('amqplib/callback_api')
 var shell = require('shelljs')
 var fs= require('fs')
+var config = require('../../public/config')
 
 var queueName = 'wx_server'
 
-amqplib.connect('amqp://jinse_admin:jinse-admin-e59cc9ba614a9b92018@172.17.59.159:5672/crawl', function(err, conn) {
+var env = config.env
+var amqplibUrl = ''
+var nodePath = ''
+var postErrorUrl = ''
+
+if (env == 'dev') {
+    amqplibUrl = config.dev.amqplibUrl
+    nodePath = config.dev.nodePath
+    postErrorUrl = config.dev.post_result_url
+} else {
+    amqplibUrl = config.pro.amqplibUrl
+    nodePath = config.pro.nodePath
+    postErrorUrl = config.dev.post_result_url
+}
+
+// amqplib.connect('amqp://jinse_admin:jinse-admin-e59cc9ba614a9b92018@172.17.59.159:5672/crawl', function(err, conn) {
 // amqplib.connect('amqp://admin:admin@127.0.0.1:5672/crawl', function(err, conn) {
+amqplib.connect(amqplibUrl, function(err, conn) {
     if (err != null) bail(err)
 
     conn.createChannel(newTask)
@@ -27,7 +44,9 @@ function newTask(err, ch) {
                     // shell.exec('bash')
                     shell.exec(`nohup sudo docker run --name=wxserver_${result.body.id} --net=host --volume="/alidata/www/wechaty":/bot --rm zixia/wechaty index.js --admin=${result.body.wechat_name} --room=${result.body.room_name} --server=${result.body.id} &`, {async:true})
                     ch.ack(msg)
-                } else if (result.body.status == '2'){
+                } else if (result.body.listen_type == 2){
+                    shell.exec(`nohup sudo docker run --name=wxserver_${result.body.id} --net=host --volume="/alidata/www/wechaty":/bot --rm zixia/wechaty official.js --admin=${result.body.wechat_name} --server=${result.body.id} &`, {async:true})
+                    ch.ack(msg)
                     // 监听公众号
 
                 } else {
@@ -37,7 +56,9 @@ function newTask(err, ch) {
                 if (result.body.listen_type == 1) {
                     shell.exec(`nohup sudo docker stop wxserver_${result.body.id} &`)
                     ch.ack(msg)
-                } else if (result.body.status == '2'){
+                } else if (result.body.listen_type == 2){
+                    shell.exec(`nohup sudo docker stop wxserver_${result.body.id} &`)
+                    ch.ack(msg)
                     // 监听公众号
 
                 } else {
