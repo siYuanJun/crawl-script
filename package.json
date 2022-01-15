@@ -9,7 +9,7 @@
     "moment": "^2.22.1",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
-    "shelljs": "^0.8.2",
+    "shelljs": "^0.8.5",
     "superagent": "^3.8.3",
     "superagent-charset": "^1.2.0",
     "superagent-proxy": "^1.0.3"
